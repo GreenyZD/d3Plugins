@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>d3Chart</title>
+    <style>
+        body{
+            background: #010c11;
+        }
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btnGroup{
+            border: 1px solid #32d7c6;
+            border-radius: 3px;
+            height: 30px;
+            width: 403px;
+            margin: 50px;
+        }
+        .btnGroup a{
+            display: inline-block;
+            border-right: 1px solid #32d7c6;
+            color: #BEE2EB;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            float: left;
+            text-align: center;
+        }
+        .btnGroup a:hover{
+            background: #32d7c6;
+            color: #253734;
+        }
+        .btnGroup a:last-child{
+            border-right: none;
+        }
+        .selected{
+            background: #32d7c6;
+            color: #253734!important;
+        }
+        .chartDiv{
+            position: absolute;
+            top:130px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .chartDiv div{
+            padding-left: 100px;
+            width: calc(100% - 100px);
+            height: 100%;
+            max-width: 1400px;
+            max-height: 600px;
+            text-align: center;
+        }
+        .hide{
+           display: none;
+        }
+    </style>
+    <script type="text/javascript" src="js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/d3Chart.js"></script>
+    <script type="text/javascript" src="js/Donut3D.js"></script>
+</head>
+<body>
+<div class="btnGroup" id="changeChart">
+    <a href="#" class="selected" id="pie">饼图</a>
+    <a href="#" id="area">面积图</a>
+    <a href="#" id="barH">横向柱状图</a>
+    <a href="#" id="barV">竖向柱状图</a>
+</div>
+<div class="chartDiv">
+    <div class="pieChart"></div>
+    <div class="areaChart"></div>
+    <div class="barHChart"></div>
+    <div class="barVChart"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    window.onload = function(){
+
+        var pieData = [
+            {
+                "value":234,
+                "label":"eg0"
+            },{
+                "value":130,
+                "label":"eg1"
+            }, {
+                "value":120,
+                "label":"eg2"
+            }];
+        new d3Pie3D(d3.select('.pieChart'),{
+            data : pieData,
+            lightImageSrc : 'img/' + ((pieData.length == 0) ? 'noPieData' : 'pieLight') + '.png'
+        });
+
+        var data = [[120,210,30,82,300,124,252,112,214],[112,221,411,118,267,226,112,212,314]];
+        var x = [0,1,2,3,4,5,6,7,8];
+
+        new d3Chart(d3.select('.areaChart'),'area',{
+            data : data,
+            xMarks : x,
+            xText:1,
+            legend:['邮件营销','联盟广告'],
+            legendStyle:'top',
+            brushOpen : true,
+            baseline:230
+        });
+
+        new d3Chart(d3.select('.barHChart'),'bar',{
+            direction:'horizontal',
+            data : data,
+            xMarks : x,
+            xText:1,
+            legend:['邮件营销','联盟广告'],
+            legendStyle:'top'
+        });
+        new d3Chart(d3.select('.barVChart'),'bar',{
+            data : data,
+            xMarks : x,
+            xText:1,
+            legend:['邮件营销','联盟广告'],
+            legendStyle:'top'
+        });
+
+
+        d3.selectAll('.chartDiv div').classed('hide',true);
+        d3.select('.chartDiv div').classed('hide',false);
+        d3.selectAll('#changeChart a').on('click',function(){
+            var id = this.id;
+
+            d3.selectAll('.selected').classed('selected',false);
+            d3.select(this).classed('selected',true);
+
+            d3.selectAll('.chartDiv div').classed('hide',true);
+            d3.select('.' + id + 'Chart').classed('hide',false);
+        });
+    };
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
